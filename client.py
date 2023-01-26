@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-25 13:43:30
+LastEditTime: 2023-01-25 22:16:33
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -14,6 +14,23 @@ import threading, time
 from sys import exit
 
 print("client")
+
+while True :
+    print("1. Transfer money to other clients")
+    print("2. Query balance transaction")
+    print("3. Print out blockchain")
+    print("0. Exit application")
+    a = input("please insert command\n")
+    if a == "0" :
+        break
+    elif a == "1" :
+        pass
+    elif a == "2" :
+        pass
+    elif a == "3" :
+        pass
+    else :
+        print("ERROR! Please insert correct command")
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
