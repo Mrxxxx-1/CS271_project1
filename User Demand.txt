@@ -1,0 +1,23 @@
+LOG NECESSARY INFOMATION on the console
+add some delay to simulate the time required for message passing
+client
+initiate connect to all other clients(IP, configuration file?)
+transfer transactions (display the results-- success or failed)
+balance transactions (see the account balance-- returned from server)
+print out the client's blockchain (contains the details of each block)
+
+server
+print out the balance table (contains the balances of all clients)
+
+blockchain insert-only？
+
+block-blockchain-client-transaction
+the relationship?
+
+Demo Case
+For the demo, you should have 3 clients. At startup, they should all display the
+following information:
+Balance: $10
+Then, the clients will issue transactions to each other, e.g. A gives B $4, etc.
+You will need to maintain each client’s balance through the banking server and
+display the order of transactions.
