@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 03:06:56
+LastEditTime: 2023-01-27 03:13:23
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -140,6 +140,9 @@ def UI():
                     status = 'Success'
                     chain = BlockChain(1, trans, status)
                     g_b = 0
+                else :
+                    status = 'Success'
+                    chain.new_block(None, trans, status)
                 print('transaction success\n')
                 g_flag = -1
             t['status'] = status
