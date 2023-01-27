@@ -25,7 +25,7 @@ import json
  
  
 class BlockChain:
-    def __init__(self, initialHash, trans, status):
+    def __init__(self, initialHash, trans):
         # init block chain
         self.chain = []
  
@@ -38,7 +38,7 @@ class BlockChain:
         self.results = []
  
         # generate GenesisBlock
-        self.new_block(initialHash, trans, status)
+        self.new_block(initialHash, trans)
 
     # def get_trans(self,trans):
     #     return trans
@@ -58,7 +58,7 @@ class BlockChain:
             return None
 
  
-    def new_block(self, initialHash = None, trans = None, status = 'pending'):
+    def new_block(self, initialHash = None, trans = None):
         if initialHash:
             # generate Genesis Block
             block = Block()
@@ -70,7 +70,7 @@ class BlockChain:
             guess = f'{block.previousHash}{block.transactionData}'.encode()
             block.hash = hashlib.sha256(guess).hexdigest()
             # block.time = time()
-            block.status = status
+            # block.status = status
             self.chain.append(block)
         else:
             block = Block()
@@ -79,10 +79,10 @@ class BlockChain:
             block.previousHash = self.last_block.get_block()['Hash']
             # block.difficulty = 0
             block.transactionData = trans
-            guess = f'{block.previousHash}{block.transactionData}'.encode()
+            guess = f'{block.previousHash}{block.transactionData}'.encode('utf-8')
             block.hash = hashlib.sha256(guess).hexdigest()
             # block.time = time()
-            block.status = status
+            # block.status = status
             self.chain.append(block)
              
             # for i in range(len(self.pitmen)):
@@ -131,7 +131,7 @@ class Block:
         self.hash = None
         self.previousHash = None
         self.transactionData = None
-        self.status = None
+        # self.status = None
  
     def get_block(self):
         return {
@@ -142,7 +142,7 @@ class Block:
             # 'Nonce': self.nonce,
             'PreviousHash': self.previousHash,
             'TransactionData': self.transactionData,
-            'Status' : self.status
+            # 'Status' : self.status
         }
  
 # class Pitman:
@@ -174,21 +174,21 @@ class Block:
 #         return difficulty, myhash, nonce
  
  
-if __name__ == '__main__':
-    trans = None
-    # trans = json.dumps({
-    #         'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-    #         'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-    #         'amount': random.randrange(1, 10000)
-    #     })
-    status = 'success'
-    chain = BlockChain(1, trans, status)
-    length = 5
-    for i in range(length):
-        # trans = json.dumps({
-        # 'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-        # 'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-        # 'amount': random.randrange(1, 10000)
-        # })
-        chain.new_block(None, trans, 'success')
-    chain.show_chain()
+# if __name__ == '__main__':
+#     trans = None
+#     # trans = json.dumps({
+#     #         'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+#     #         'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+#     #         'amount': random.randrange(1, 10000)
+#     #     })
+#     status = 'success'
+#     chain = BlockChain(1, trans, status)
+#     length = 5
+#     for i in range(length):
+#         # trans = json.dumps({
+#         # 'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+#         # 'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+#         # 'amount': random.randrange(1, 10000)
+#         # })
+#         chain.new_block(None, trans, 'success')
+#     chain.show_chain()

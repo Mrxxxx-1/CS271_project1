@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 03:36:39
+LastEditTime: 2023-01-27 08:31:02
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -70,12 +70,11 @@ def RECV():
       try :
         if isinstance(json.loads(data.decode('utf-8')), dict) :
             trans = json.loads(data.decode('utf-8'))
-            status = trans['status']
-            del trans['status']
+            # del trans['status']
             if chain == None:
-                chain = BlockChain(1, trans, status)
+                chain = BlockChain(1, data.decode('utf-8'))
             else :
-                chain.new_block(None, trans, status)
+                chain.new_block(None, data.decode('utf-8'))
       except : 
         # print(data.decode('utf-8'))
         # time.sleep(1)
@@ -147,27 +146,33 @@ def UI():
                 s.sendto(trans.encode('utf-8'), (HOST, 10888))
                 time.sleep(1)
             if g_flag == 0 :
+                status = 'Aborted'
+                t['status'] = status
+                trans = json.dumps(t)
                 if g_b == -1 :
-                    status = 'Aborted'
-                    chain = BlockChain(1, trans, status)
+                    # status = 'Aborted'
+                    chain = BlockChain(1, trans)
                     g_b = 0
                 else :
-                    status = 'Aborted'
-                    chain.new_block(None, trans, status)
+                    # status = 'Aborted'
+                    chain.new_block(None, trans)
                 print('transaction aborted\n')
                 g_flag = -1
             if g_flag == 1 :
+                status = 'Success'
+                t['status'] = status
+                trans = json.dumps(t)
                 if g_b == -1 :
                     status = 'Success'
-                    chain = BlockChain(1, trans, status)
+                    chain = BlockChain(1, trans)
                     g_b = 0
                 else :
                     status = 'Success'
-                    chain.new_block(None, trans, status)
+                    chain.new_block(None, trans)
                 print('transaction success\n')
                 g_flag = -1
-            t['status'] = status
-            trans = json.dumps(t)
+            # t['status'] = status
+            # trans = json.dumps(t)
             for key, value in usertable.items():
                 if key != username:
                     s.sendto(trans.encode('utf-8'), (HOST, usertable[key]))
