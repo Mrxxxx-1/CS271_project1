@@ -25,7 +25,7 @@ from time import time
  
  
 class BlockChain:
-    def __init__(self, initialHash):
+    def __init__(self, initialHash, trans):
         # init block chain
         self.chain = []
  
@@ -38,23 +38,27 @@ class BlockChain:
         self.results = []
  
         # generate GenesisBlock
-        self.new_block(initialHash)
- 
+        self.new_block(initialHash, trans)
+
+    # def get_trans(self,trans):
+    #     return trans
+        
+    # def get_trans(self):
+    #     return json.dumps({
+    #         'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+    #         'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+    #         'amount': random.randrange(1, 10000)
+    #     })
+        
     @property
     def last_block(self):
         if len(self.chain):
             return self.chain[-1]
         else:
             return None
+
  
-    def get_trans(self):
-        return json.dumps({
-            'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-            'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-            'amount': random.randrange(1, 10000)
-        })
- 
-    def new_block(self, initialHash=None):
+    def new_block(self, initialHash = None, trans = None):
         if initialHash:
             # generate Genesis Block
             block = Block()
@@ -62,7 +66,7 @@ class BlockChain:
             block.nonce = random.randrange(0, 99999)
             block.previousHash = '0'
             # block.difficulty = 0
-            block.transactionData = self.get_trans()
+            block.transactionData = trans
             guess = f'{block.previousHash}{block.nonce}{block.transactionData}'.encode()
             block.hash = hashlib.sha256(guess).hexdigest()
             block.time = time()
@@ -73,7 +77,7 @@ class BlockChain:
             block.nonce = random.randrange(0, 99999)
             block.previousHash = self.last_block.get_block()['Hash']
             # block.difficulty = 0
-            block.transactionData = self.get_trans()
+            block.transactionData = trans
             guess = f'{block.previousHash}{block.nonce}{block.transactionData}'.encode()
             block.hash = hashlib.sha256(guess).hexdigest()
             block.time = time()
@@ -163,7 +167,12 @@ class Block:
  
  
 if __name__ == '__main__':
-    chain = BlockChain(1)
+    trans = json.dumps({
+            'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+            'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+            'amount': random.randrange(1, 10000)
+        })
+    chain = BlockChain(1, trans)
     length = 5
     for i in range(length):
         chain.new_block()
