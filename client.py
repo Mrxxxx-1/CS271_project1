@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-26 22:23:15
+LastEditTime: 2023-01-27 00:33:51
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -12,6 +12,7 @@ Copyright (c) 2023 by Mrx, All Rights Reserved.
 import socket
 import threading, time
 from sys import exit
+import json
 
 print("client")
 
@@ -37,11 +38,12 @@ time.sleep(1)
 #         s.sendto(username.encode('utf-8'), (HOST, usertable[key]))
 #         time.sleep(1)
 
-count = 0
+g_count = 0
 
 PORT = 10888
 flag = True
 def RECV():
+    global g_count
     while flag:
       (data, addr) = s.recvfrom(1024)
       if usertable.get(data.decode('utf-8')) :
@@ -53,10 +55,11 @@ def RECV():
         time.sleep(1)
       elif data.decode('utf-8') == "OK" :
         print('User(%s) agreed to the request' % (user[addr]))
-        count = count + 1
+        g_count += 1
         time.sleep(1)
-      print(data.decode('utf-8'))
-      time.sleep(1)
+      else:
+        print(data.decode('utf-8'))
+        time.sleep(1)
       
 # def SEND():
 #    while True:
@@ -65,6 +68,7 @@ def RECV():
 #       time.sleep(1)
 
 def UI():
+    global g_count
     while True :
         print("1. Transfer money to other clients")
         print("2. Query balance transaction")
@@ -81,8 +85,10 @@ def UI():
                 if key != username:
                     s.sendto(info.encode('utf-8'), (HOST, usertable[key]))
                     time.sleep(1)
-            if count == 3 :
+            if g_count == 2 :
+                g_count = 0
                 data = 'Query balance'
+                print('send request to server')
                 s.sendto(data.encode('utf-8'), (HOST, 10888))
                 time.sleep(1)
 

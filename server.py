@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-26 21:55:31
+LastEditTime: 2023-01-27 00:33:49
 FilePath: \CS271_project1\server.py
 Description: 
 
@@ -14,6 +14,7 @@ Copyright (c) 2023 by Mrx, All Rights Reserved.
 import socket
 import threading, time
 from sys import exit
+import json
 
 user = { ('192.168.0.167', 10882) : 'Alice', ('192.168.0.167', 10884) : 'Bob', ('192.168.0.167', 10886) : 'Carl'} 
 balancetable = {'Alice' : 10, 'Bob' : 10, 'Carl' : 10}
