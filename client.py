@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 01:25:37
+LastEditTime: 2023-01-27 03:06:56
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -13,6 +13,7 @@ import socket
 import threading, time
 from sys import exit
 import json
+from blockchain import *
 
 print("client")
 
@@ -40,12 +41,15 @@ time.sleep(1)
 
 g_count = 0
 g_flag = -1
+g_b =-1
+chain = None
 
 PORT = 10888
 flag = True
 def RECV():
     global g_count
     global g_flag
+    global chain
     while flag:
       (data, addr) = s.recvfrom(1024)
       if usertable.get(data.decode('utf-8')) :
@@ -63,6 +67,14 @@ def RECV():
         g_flag = 0
       elif data.decode('utf-8') == "Approved" :
         g_flag = 1
+    #   elif isinstance(json.loads(data.decode('utf-8')), dict) :
+    #     trans = json.loads(data.decode('utf-8'))
+    #     status = trans['status']
+    #     del trans['status']
+    #     if chain == None:
+    #         chain = BlockChain(1, trans, status)
+    #     else :
+    #         chain.new_block(None, trans, status)
       else:
         print(data.decode('utf-8'))
         time.sleep(1)
@@ -76,6 +88,8 @@ def RECV():
 def UI():
     global g_count
     global g_flag
+    global g_b
+    global chain
     while True :
         print("1. Transfer money to other clients")
         print("2. Query balance transaction")
@@ -95,8 +109,10 @@ def UI():
                 break
             am = input("please insert transfer amount : ")
             t = {}
-            t[cl] = am
-            print(t)
+            t['sender'] = username
+            t['recipient'] = cl
+            t['amount'] = am
+            # print(t)
             trans = json.dumps(t)
             info = 'Transfer'
             for key, value in usertable.items():
@@ -110,11 +126,28 @@ def UI():
                 s.sendto(trans.encode('utf-8'), (HOST, 10888))
                 time.sleep(1)
             if g_flag == 0 :
+                if g_b == -1 :
+                    status = 'Aborted'
+                    chain = BlockChain(1, trans, status)
+                    g_b = 0
+                else :
+                    status = 'Aborted'
+                    chain.new_block(None, trans, status)
                 print('transaction aborted\n')
                 g_flag = -1
             if g_flag == 1 :
-                print('transaction successed\n')
+                if g_b == -1 :
+                    status = 'Success'
+                    chain = BlockChain(1, trans, status)
+                    g_b = 0
+                print('transaction success\n')
                 g_flag = -1
+            t['status'] = status
+            trans = json.dumps(t)
+            for key, value in usertable.items():
+                if key != username:
+                    s.sendto(trans.encode('utf-8'), (HOST, usertable[key]))
+                    time.sleep(1)
 
         elif a == "2" :
             data = 'Query balance'
@@ -122,7 +155,10 @@ def UI():
             time.sleep(1)
 
         elif a == "3" :
-            pass
+            if chain == None :
+                print('No blockchain now!\n')
+            else :
+                chain.show_chain()
         else :
             print("ERROR! Please insert correct command")
 

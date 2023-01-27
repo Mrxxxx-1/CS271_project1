@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 01:23:23
+LastEditTime: 2023-01-27 02:57:48
 FilePath: \CS271_project1\server.py
 Description: 
 
@@ -53,16 +53,14 @@ def listen():
         elif data.decode('utf-8') == 'Query balance' :
             print('User(%s) queried its account balance' % (user[addr]))
             data = "You have $ " + str(balancetable[user[addr]]) + " in your account\n"
+            # data = str(balancetable[user[addr]])
             s.sendto(data.encode('utf-8'), addr)
             time.sleep(1)
         elif isinstance(json.loads(data.decode('utf-8')), dict) :
             trans = json.loads(data.decode('utf-8'))
             # am = int(trans[user[addr]])
-            receiver = ''
-            am = 0
-            for item in trans :
-                receiver = item
-                am = int(trans[item])            
+            receiver = trans['recipient']
+            am = int(trans['amount'])         
             sum = balancetable[user[addr]]
             # print(am)
             # print(sum)
@@ -75,7 +73,7 @@ def listen():
                 balancetable[user[addr]] -= am
                 balancetable[receiver] += am
                 s.sendto(data.encode('utf-8'), addr)
-                info = 'User ' + user[addr] + 'transferred $' + str(am) + ' to ' + receiver
+                info = 'User ' + user[addr] + ' transferred $' + str(am) + ' to ' + receiver
                 print(info)
                 time.sleep(1)                                
 

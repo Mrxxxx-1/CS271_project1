@@ -1,10 +1,10 @@
 import hashlib
-import random
+# import random
 import string
 import json
 # import threading
 # from decimal import Decimal
-from time import time
+# from time import time
  
  
 # class MyThread(threading.Thread):
@@ -62,26 +62,26 @@ class BlockChain:
         if initialHash:
             # generate Genesis Block
             block = Block()
-            block.index = 0
-            block.nonce = random.randrange(0, 99999)
+            # block.index = 0
+            # block.nonce = random.randrange(0, 99999)
             block.previousHash = '0'
             # block.difficulty = 0
             block.transactionData = trans
-            guess = f'{block.previousHash}{block.nonce}{block.transactionData}'.encode()
+            guess = f'{block.previousHash}{block.transactionData}'.encode()
             block.hash = hashlib.sha256(guess).hexdigest()
-            block.time = time()
+            # block.time = time()
             block.status = status
             self.chain.append(block)
         else:
             block = Block()
-            block.index = len(self.chain)
-            block.nonce = random.randrange(0, 99999)
+            # block.index = len(self.chain)
+            # block.nonce = random.randrange(0, 99999)
             block.previousHash = self.last_block.get_block()['Hash']
             # block.difficulty = 0
             block.transactionData = trans
-            guess = f'{block.previousHash}{block.nonce}{block.transactionData}'.encode()
+            guess = f'{block.previousHash}{block.transactionData}'.encode()
             block.hash = hashlib.sha256(guess).hexdigest()
-            block.time = time()
+            # block.time = time()
             block.status = status
             self.chain.append(block)
              
@@ -124,10 +124,10 @@ class BlockChain:
  
 class Block:
     def __init__(self):
-        self.index = None
-        self.time = None
+        # self.index = None
+        # self.time = None
         # self.difficulty = None
-        self.nonce = None
+        # self.nonce = None
         self.hash = None
         self.previousHash = None
         self.transactionData = None
@@ -135,11 +135,11 @@ class Block:
  
     def get_block(self):
         return {
-            'Index': self.index,
-            'Time': self.time,
+            # 'Index': self.index,
+            # 'Time': self.time,
             # 'Difficulty': self.difficulty,
             'Hash': self.hash,
-            'Nonce': self.nonce,
+            # 'Nonce': self.nonce,
             'PreviousHash': self.previousHash,
             'TransactionData': self.transactionData,
             'Status' : self.status
@@ -175,19 +175,20 @@ class Block:
  
  
 if __name__ == '__main__':
-    trans = json.dumps({
-            'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-            'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-            'amount': random.randrange(1, 10000)
-        })
+    trans = None
+    # trans = json.dumps({
+    #         'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+    #         'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+    #         'amount': random.randrange(1, 10000)
+    #     })
     status = 'success'
     chain = BlockChain(1, trans, status)
     length = 5
-    # for i in range(length):
-    #     trans = json.dumps({
-    #     'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-    #     'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-    #     'amount': random.randrange(1, 10000)
-    #     })
-    #     chain.new_block(None, trans)
+    for i in range(length):
+        # trans = json.dumps({
+        # 'sender': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+        # 'recipient': ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+        # 'amount': random.randrange(1, 10000)
+        # })
+        chain.new_block(None, trans, 'success')
     chain.show_chain()
