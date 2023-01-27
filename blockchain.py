@@ -104,7 +104,7 @@ class Block:
     def __init__(self):
         self.index = None
         self.time = None
-        self.difficulty = None
+        # self.difficulty = None
         self.nonce = None
         self.hash = None
         self.previousHash = None
@@ -114,7 +114,7 @@ class Block:
         return {
             'Index': self.index,
             'Time': self.time,
-            'Difficulty': self.difficulty,
+            # 'Difficulty': self.difficulty,
             'Hash': self.hash,
             'Nonce': self.nonce,
             'PreviousHash': self.previousHash,
