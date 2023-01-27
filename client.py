@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 09:39:01
+LastEditTime: 2023-01-27 10:56:19
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -33,11 +33,11 @@ HOST = '192.168.0.167'
 s.bind((HOST, PORT))
 
 s.sendto(username.encode('utf-8'), (HOST, 10888))
-time.sleep(1)
+time.sleep(3)
 # for key, value in usertable.items():
 #     if key != username:
 #         s.sendto(username.encode('utf-8'), (HOST, usertable[key]))
-#         time.sleep(1)
+#         time.sleep(3)
 
 g_count = 0
 g_flag = -1
@@ -60,11 +60,11 @@ def RECV():
     #     print('User(%s) is requesting a transfer' % (user[addr]))
     #     data = "OK"
     #     s.sendto(data.encode('utf-8'), addr)
-    #     time.sleep(1)
+    #     time.sleep(3)
     #   elif data.decode('utf-8') == "OK" :
     #     print('User(%s) agreed to the request' % (user[addr]))
     #     g_count += 1
-    #     time.sleep(1)
+    #     time.sleep(3)
     #   elif data.decode('utf-8') == "Denied" :
     #     g_flag = 0
     #   elif data.decode('utf-8') == "Approved" :
@@ -91,14 +91,14 @@ def RECV():
                 data2[username] = g_time
                 data22 = json.dumps(data2)
                 s.sendto(data22.encode('utf-8'), addr)
-                time.sleep(1)
+                time.sleep(3)
             elif rev['info'] == "OK" :
                 print('User(%s) agreed to the request' % (user[addr]))
                 g_count += 1
                 g_time = max(g_time, int(rev[user[addr]]))
                 g_time += 1
                 print("Local Lamport time(%d)\n" %(g_time))
-                time.sleep(1)
+                time.sleep(3)
             # elif data.decode('utf-8') == "Denied" :
             #     g_flag = 0
             # elif data.decode('utf-8') == "Approved" :
@@ -109,7 +109,7 @@ def RECV():
         if data.decode('utf-8') == "Approved" :
             g_flag = 1
         print(data.decode('utf-8'))
-        time.sleep(1)
+        time.sleep(3)
         # pass
     #   if usertable.get(data.decode('utf-8')) :
     #         print("connected to client(%s)" % (data.decode('utf-8')))
@@ -117,24 +117,24 @@ def RECV():
     #     print('User(%s) is requesting a transfer' % (user[addr]))
     #     data = "OK"
     #     s.sendto(data.encode('utf-8'), addr)
-    #     time.sleep(1)
+    #     time.sleep(3)
     #   elif data.decode('utf-8') == "OK" :
     #     print('User(%s) agreed to the request' % (user[addr]))
     #     g_count += 1
-    #     time.sleep(1)
+    #     time.sleep(3)
     #   elif data.decode('utf-8') == "Denied" :
     #     g_flag = 0
     #   elif data.decode('utf-8') == "Approved" :
     #     g_flag = 1
     #   else:
     #     print(data.decode('utf-8'))
-    #     time.sleep(1)
+    #     time.sleep(3)
       
 # def SEND():
 #    while True:
 #       data = input("")
 #       s.sendto(data.encode('utf-8'), (HOST, PORT))
-#       time.sleep(1)
+#       time.sleep(3)
 
 def UI():
     global g_count
@@ -176,13 +176,13 @@ def UI():
             for key, value in usertable.items():
                 if key != username:
                     s.sendto(data11.encode('utf-8'), (HOST, usertable[key]))
-                    time.sleep(1)
+                    time.sleep(3)
             if g_count == 2 :
                 g_count = 0
                 # data = 'Query balance'
                 print('send request to server')
                 s.sendto(trans.encode('utf-8'), (HOST, 10888))
-                time.sleep(1)
+                time.sleep(3)
             if g_flag == 0 :
                 g_time += 1
                 t[username] = g_time
@@ -218,14 +218,14 @@ def UI():
             for key, value in usertable.items():
                 if key != username:
                     s.sendto(trans.encode('utf-8'), (HOST, usertable[key]))
-                    time.sleep(1)
+                    time.sleep(3)
 
         elif a == "2" :
             g_time += 1
             data = 'Query balance'
             s.sendto(data.encode('utf-8'), (HOST, 10888))
             print("Local Lamport time(%d)\n" %(g_time))
-            time.sleep(1)
+            time.sleep(3)
 
         elif a == "3" :
             g_time += 1

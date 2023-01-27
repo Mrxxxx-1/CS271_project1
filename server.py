@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 02:57:48
+LastEditTime: 2023-01-27 10:55:44
 FilePath: \CS271_project1\server.py
 Description: 
 
@@ -55,7 +55,7 @@ def listen():
             data = "You have $ " + str(balancetable[user[addr]]) + " in your account\n"
             # data = str(balancetable[user[addr]])
             s.sendto(data.encode('utf-8'), addr)
-            time.sleep(1)
+            time.sleep(3)
         elif isinstance(json.loads(data.decode('utf-8')), dict) :
             trans = json.loads(data.decode('utf-8'))
             # am = int(trans[user[addr]])
@@ -67,7 +67,7 @@ def listen():
             if(am > sum) :
                 data = "Denied"
                 s.sendto(data.encode('utf-8'), addr)
-                time.sleep(1)
+                time.sleep(3)
             else :
                 data = "Approved"
                 balancetable[user[addr]] -= am
@@ -75,7 +75,7 @@ def listen():
                 s.sendto(data.encode('utf-8'), addr)
                 info = 'User ' + user[addr] + ' transferred $' + str(am) + ' to ' + receiver
                 print(info)
-                time.sleep(1)                                
+                time.sleep(3)                                
 
 #    else:
 #       print(addr," : ", data.decode('utf-8'))
