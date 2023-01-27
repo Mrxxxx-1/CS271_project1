@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 03:13:23
+LastEditTime: 2023-01-27 03:36:39
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -52,6 +52,34 @@ def RECV():
     global chain
     while flag:
       (data, addr) = s.recvfrom(1024)
+    #   if usertable.get(data.decode('utf-8')) :
+    #         print("connected to client(%s)" % (data.decode('utf-8')))
+    #   elif data.decode('utf-8') == 'Transfer' :
+    #     print('User(%s) is requesting a transfer' % (user[addr]))
+    #     data = "OK"
+    #     s.sendto(data.encode('utf-8'), addr)
+    #     time.sleep(1)
+    #   elif data.decode('utf-8') == "OK" :
+    #     print('User(%s) agreed to the request' % (user[addr]))
+    #     g_count += 1
+    #     time.sleep(1)
+    #   elif data.decode('utf-8') == "Denied" :
+    #     g_flag = 0
+    #   elif data.decode('utf-8') == "Approved" :
+    #     g_flag = 1
+      try :
+        if isinstance(json.loads(data.decode('utf-8')), dict) :
+            trans = json.loads(data.decode('utf-8'))
+            status = trans['status']
+            del trans['status']
+            if chain == None:
+                chain = BlockChain(1, trans, status)
+            else :
+                chain.new_block(None, trans, status)
+      except : 
+        # print(data.decode('utf-8'))
+        # time.sleep(1)
+        pass
       if usertable.get(data.decode('utf-8')) :
             print("connected to client(%s)" % (data.decode('utf-8')))
       elif data.decode('utf-8') == 'Transfer' :
@@ -67,14 +95,6 @@ def RECV():
         g_flag = 0
       elif data.decode('utf-8') == "Approved" :
         g_flag = 1
-    #   elif isinstance(json.loads(data.decode('utf-8')), dict) :
-    #     trans = json.loads(data.decode('utf-8'))
-    #     status = trans['status']
-    #     del trans['status']
-    #     if chain == None:
-    #         chain = BlockChain(1, trans, status)
-    #     else :
-    #         chain.new_block(None, trans, status)
       else:
         print(data.decode('utf-8'))
         time.sleep(1)
@@ -113,6 +133,7 @@ def UI():
             t['recipient'] = cl
             t['amount'] = am
             # print(t)
+            status = ''
             trans = json.dumps(t)
             info = 'Transfer'
             for key, value in usertable.items():
