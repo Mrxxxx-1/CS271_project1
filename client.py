@@ -2,7 +2,7 @@
 Author: Mrx
 Date: 2023-01-25 13:18:48
 LastEditors: Mrx
-LastEditTime: 2023-01-27 00:33:51
+LastEditTime: 2023-01-27 01:25:37
 FilePath: \CS271_project1\client.py
 Description: 
 Copyright (c) 2023 by Mrx, All Rights Reserved. 
@@ -39,11 +39,13 @@ time.sleep(1)
 #         time.sleep(1)
 
 g_count = 0
+g_flag = -1
 
 PORT = 10888
 flag = True
 def RECV():
     global g_count
+    global g_flag
     while flag:
       (data, addr) = s.recvfrom(1024)
       if usertable.get(data.decode('utf-8')) :
@@ -57,6 +59,10 @@ def RECV():
         print('User(%s) agreed to the request' % (user[addr]))
         g_count += 1
         time.sleep(1)
+      elif data.decode('utf-8') == "Denied" :
+        g_flag = 0
+      elif data.decode('utf-8') == "Approved" :
+        g_flag = 1
       else:
         print(data.decode('utf-8'))
         time.sleep(1)
@@ -69,6 +75,7 @@ def RECV():
 
 def UI():
     global g_count
+    global g_flag
     while True :
         print("1. Transfer money to other clients")
         print("2. Query balance transaction")
@@ -80,6 +87,17 @@ def UI():
             # to server
             break
         elif a == "1" :
+            while True:
+                cl = input("please insert client's username : ")
+                if usertable.get(username) == None :
+                    print("wrong username!")
+                    continue
+                break
+            am = input("please insert transfer amount : ")
+            t = {}
+            t[cl] = am
+            print(t)
+            trans = json.dumps(t)
             info = 'Transfer'
             for key, value in usertable.items():
                 if key != username:
@@ -87,10 +105,16 @@ def UI():
                     time.sleep(1)
             if g_count == 2 :
                 g_count = 0
-                data = 'Query balance'
+                # data = 'Query balance'
                 print('send request to server')
-                s.sendto(data.encode('utf-8'), (HOST, 10888))
+                s.sendto(trans.encode('utf-8'), (HOST, 10888))
                 time.sleep(1)
+            if g_flag == 0 :
+                print('transaction aborted\n')
+                g_flag = -1
+            if g_flag == 1 :
+                print('transaction successed\n')
+                g_flag = -1
 
         elif a == "2" :
             data = 'Query balance'
